@@ -124,7 +124,7 @@ obj.method4()
 
 
 //Nome das propriedades
-//modo antigo
+//modo tradicional
 var propName1 = 'propName1';
 var obj = {}
 obj[propName1] = 'prop value 1'
@@ -145,7 +145,200 @@ console.log(obj2);
 
 ### Aula I - Conheça Rest e Spread Operator
 
+```javascript
+//Rest Operator
+//Utilizado para parâmetros de função
+//modo tradicional
+//passagens de parâmetros limitados, usando a palavra reservada arguments, cujo prototype é objeto
+function sum(a, b) {
+  var value =  0;
+  for(var i = 0; i < arguments.length; i++) {
+    value += arguments[i];
+  }
+
+  return value;
+}
+console.log(sum(5, 5, 5, 5))
+
+
+//passagens de parâmetros ilimitados
+//rest operator: ...
+//cujo prototype é array
+//Quando o rest operator é utilizado nos argumentos de uma função, além da lista de argumentos, ele também traz os métodos e propriedades de array por ser uma instância de um array
+function sum2(...args) {
+  //soma utilizando os métodos de operação de array
+  return args.reduce((acum, value) => acum + value, 0)
+}
+console.log(sum2(5, 5, 5, 5))
+
+
+//arrow function com rest operator
+const sum3 = (...args) => {
+  return args.reduce((acum, value) => acum + value, 0);
+};
+
+console.log(sum3(5, 5, 5, 5))
+
+
+//primeiros parâmetros separados e demais como argumentos rest operator
+const sum4 = (a, b, ...args) => {
+  return a + b + args.reduce((acum, value) => acum + value, 0);
+};
+
+console.log(sum4(5, 5, 5, 5))
+```
+
+```javascript
+//Spread Operator
+//Utilizado basicamente para quebrar os itens e passar para outro lugar
+//pode-se utilizar em string, arrays, literal objects e objects iteraveis
+//somente para criar novos objetos
+
+//string
+//quebra a string em caracteres
+const str = 'Digital Innovation One';
+function logArgs(...args) {
+  console.log(args)
+}
+logArgs(...str)
+
+
+//arrays
+//quebra um array em itens
+const arr = [1, 2, 3, 4]
+function logArr(...args) {
+  console.log(args)
+}
+logArr(...arr)
+
+//construção de arrays
+//modo tradicional
+const arr2 = arr.concat([5, 6, 7]);
+console.log(arr2)
+
+//com spread operator
+const arr3 = [...arr, 5, 6, 7];
+console.log(arr3)
+
+//clone de array
+const arr4 = [...arr];
+console.log(arr4)
+
+
+//objects
+const obj = {
+  test: 123
+}
+
+const obj2 = {
+  teste: 456
+}
+
+//merge de objetos
+const obj3 = {
+  ...obj,
+  ...obj2
+}
+console.log(obj3)
+
+//clone de objeto raso
+const obj4 = {
+  ...obj
+}
+
+console.log(obj4)
+
+//cuidados na clonagem dessa maneira, pois os sub-objetos mantem a referência do objeto original, sendo assim se alterar na cópia o original também é alterado.
+const obj5 = {
+  test: 123,
+  subObj: {
+    teste: 123
+  }
+}
+
+const obj6 = { ...obj5 };
+obj6.subObj.teste = 456;
+console.log(obj5)
+
+//uma alternativa é gerar um sub-objeto com o spread operator
+const obj7 = { ...obj5, subObj: { ...obj5.subObj} };
+obj7.subObj.teste = 456;
+console.log(obj5)
+```
+
 ### Aula II - Como usar Destructuring em ReactJS
+
+```javascript
+//Destructuring com arrays
+//modo tradicional
+var arr = ['Apple', 'Banana', 'Orange', ['Tomato']];
+var apple = arr[0];
+var banana = arr[1];
+var orange = arr[2];
+var tomato = arr[3][0];
+
+//Destructuring
+var [apple2, banana2, orange2, [tomato2]] = ['Apple', 'Banana', 'Orange', ['Tomato']];
+console.log(apple, apple2)
+
+console.log(tomato, tomato2)
+
+
+//Destructuring com objects
+var obj = {
+  name: 'Daniel'
+}
+var name2 = obj.name;
+
+//mesmo nome de variável
+var { name } = obj;
+
+console.log(name2, name)
+
+//define nova variável
+var { name: name3 } = obj;
+console.log(name3)
+
+
+//Destructuring com objects dentro de objetos
+var obj2 = {
+  name: 'Daniel',
+  props: {
+    age: 35,
+    favoriteColors: ['black', 'blue']
+  }
+}
+
+//modo tradicional
+var age = obj2.props.age;
+console.log(age)
+
+//Destructuring
+var { props: { age: age2, favoriteColors: [color1, color2] } } = obj2;
+console.log(age2)
+console.log(color1)
+console.log(color2)
+
+
+//Destructuring com arrays
+var arr = [{ name: 'Apple', type: 'fruit' }];
+var [{ name: fruitName }] = arr
+console.log(fruitName)
+
+
+//Destructuring com functions, passando array como parâmetro + Default Values
+function sum([a, b] = [0, 0]) {
+  return a + b;
+}
+console.log(sum([5, 5]));
+
+
+//Destructuring com functions, passando objeto como parâmetro
+function sum({a, b}) {
+  return a + b;
+}
+console.log(sum({a: 5, b: 5}));
+```
 
 ## Módulo III - Introdução a Generators
 

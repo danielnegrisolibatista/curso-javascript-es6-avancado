@@ -344,7 +344,168 @@ console.log(sum({a: 5, b: 5}));
 
 ### Aula I - Symbols e Iterators
 
+#### Symbols
+
+- Symbols são maneiras de gerar identificadores únicos
+- Symbols são invocados como se chama uma função
+- Propriedades de objetos criadas usando identificadores únicos podem ser descobertas usando o symbol utilizado como identificador ou o método Object.getOwnPropertySymbols.
+
+```javascript
+// Symbol
+const uniqueHello1 = Symbol('Hello');
+const uniqueHello2 = Symbol('Hello');
+
+// false, Symbol são sempre diferentes uns dos outros
+console.log(uniqueHello1 === uniqueHello2);
+
+// Well known Symbols
+// Com esse tipos podemos usar para adicionar propriedades ao objeto
+Symbol.iterator
+Symbol.split
+Symbol.toStringTag
+```
+
+#### Iterators
+
+- Alguns elementos já possuem a propriedade Symbol.iterator que permite realizar iterações, como os arrays
+- "for of" é utilizado para obter os valores gerados através do iterador em um objeto ou tipo iterável.
+- Ao consumir um iterador, sabemos se a iteração finalizou através da propriedade done no objeto retornado na iteração.
+- Ao invocar o método next de um iterador, o seu retorno é um objeto contendo um método next e uma propriedade done.
+
+```javascript
+// Iterators
+const arr = [1, 2, 3, 4];
+const it = arr[Symbol.iterator];
+
+// exemplo de iterador, modo tradicional
+while (true) {
+  let { value, done } = it.next()
+  if (done) {
+    break;
+  }
+  console.log(value)
+}
+
+// exemplo de iterador, modo ES6
+for (let value of arr) {
+  console.log(value)
+}
+
+// exemplo de iterador, modo ES6
+const str 'Digital Innovation One';
+for (let value of str) {
+  console.log(value)
+}
+```
+
+```javascript
+// Iterators e Objetos
+// adicionando propriedade (Symbol.iterator, Well known Symbols) ao objeto para torná-lo iterável
+const obj = {
+  values: [1, 2, 3, 4],
+  [Symbol.iterator]() {
+    let i = 0;
+
+    return {
+      next: () => {
+        i++;
+
+        return {
+          value: this.values[i - 1],
+          done: i > this.values.length
+        };
+      }
+    };
+  }
+};
+
+
+// iteração em objetos
+const it = obj[Symbol.iterator]()
+
+console.log(it.next())
+console.log(it.next())
+console.log(it.next())
+console.log(it.next())
+console.log(it.next())
+
+// iteração em objetos
+for (let value of obj) {
+  console.log(value)
+}
+
+// iteração em objetos
+for (let value of obj) {
+  console.log(value)
+}
+
+// spread com objeto
+const arr2 = [...obj];
+console.log(arr2);
+```
+
 ### Aula II - Aprenda sobre Generators e onde utilizá-los
+
+- Generators pausa e despausa funções
+- Se comunica através de iterações
+- A forma de retornar um valor em cada iteração de uma função generator é incluir o valor após a palavra yield.
+- Generators podem receber valores em cada pausa para continuar sua execução, podemos enviar valores de volta ao iterador passando o valor como parâmetro ao método next.
+- Generators podem "pausar" sua execução através da palavra reservada yield
+- Podemos utilizar generators para construir objetos iteráveis, pois generators utilizam a mesma interface e podem ser utilizados para construir o iterador de um objeto iterável.
+
+```javascript
+// pausa na execução da função e passagem de parâmetros para cada retomada da execução
+function* hello() {
+  console.log('Hello');
+  yield 1; // pode-se passar um valor para o yield
+
+  console.log('From');
+  const value = yield 2;
+
+  console.log(value);
+}
+
+const it = hello();
+
+console.log(it.next())
+console.log(it.next())
+console.log(it.next('Outside!')) // passagem de parâmetros
+```
+
+```javascript
+// criação de uma função com números infinitos, mas chamados quando necessário
+function* naturalNumbers() {
+  let number = 0;
+  while (true) {
+    yield number;
+    number++;
+  }
+}
+
+const it = naturalNumbers();
+console.log(it.next());
+console.log(it.next());
+console.log(it.next());
+console.log(it.next());
+```
+
+```javascript
+// podemos usar o generator para construir a interface de geração dos iterators.
+// dessa for não é necessário criar o método next, pois o generator realiza o procedimento, ou seja, generator pode ser usado para criar iterator
+const obj = {
+  values: [1, 2, 3, 4],
+  *[Symbol.iterator]() {
+    for (var i = 0; i < this.values.length; i++) {
+      yield this.values[i];
+    }
+  }
+};
+
+// iteração em objetos
+for (let value of obj) {
+  console.log(value)
+}
+```
 
 ## Módulo IV - Aplicando conceitos Promises e Fetch
 

@@ -507,6 +507,48 @@ for (let value of obj) {
 }
 ```
 
+#### Exercícios - Módulo III
+
+"for of" é utilizado para:
+
+- Obter os valores gerados através do iterador em um objeto ou tipo iterável.
+
+A forma de retornar um valor em cada iteração de uma função generator:
+
+- Incluindo o valor após a palavra yield.
+
+Ao consumir um iterador, como sabemos se a iteração finalizou:
+
+- Através da propriedade done no objeto retornado na iteração.
+
+Generators podem receber valores em cada pausa para continuar sua execução:
+
+- Sim, podemos enviar valores de volta ao iterador passando o valor como parâmetro ao método next.
+
+Tipos e objetos iteráveis possuem:
+
+- Um método responsável por gerar o seu iterador, sendo acessível pela chave Symbol.iterator.
+
+Generators podem "pausar" sua execução através de qual palavra reservada:
+
+- yield
+
+Ao invocar o método next de um iterador, o seu retorno deve ser:
+
+- Um objeto contendo um método next e uma propriedade done.
+
+Podemos utilizar generators para construir objetos iteráveis:
+
+- Sim, pois generators utilizam a mesma interface e podem ser utilizados para construir o iterador de um objeto iterável.
+
+Symbols podem ser usados para gerar:
+
+- Identificadores únicos.
+
+Propriedades de objetos criadas usando identificadores únicos podem ser descobertas usando:
+
+- Utilizando o symbol utilizado como identificador ou o método Object.getOwnPropertySymbols.
+
 ## Módulo IV - Aplicando conceitos Promises e Fetch
 
 ### Aula I - Callbacks e Promises
@@ -636,6 +678,7 @@ Promise.race([doSomethingPromise(), doOtherThingPromise()])
 - O retorno da invocação da função fetch é uma Promise.
 
 ```json
+// data.json
 {
   "data": [1, 2, 3]
 }
@@ -779,22 +822,464 @@ users.userLogged({ user: 'Daniel' });
 // server node node-script.js
 ```
 
+#### Exercícios - Módulo IV
+
+O método de uma Promise utilizado para tratar seus erros
+
+- método .catch que irá receber uma função para o tratamento
+
+Objetivo do método Promise.race
+
+- Criar uma Promise contendo diversas Promise e trazer o retorno da primeira que resolver entre elas.
+
+Uma requisição feita utilizando fetch só irá disparar um erro caso
+
+- Aconteça um erro de rede e não seja possível realizar a requisição.
+
+O retorno da invocação da função fetch
+
+- Uma Promise.
+
+Utilizar callbacks ao desenvolver JavaScript assíncrono pode trazer quais tipos de problemas quando não utilizado com cautela?
+
+- Problemas com a legibilidade e manutenção do código, pois podemos cair no chamado "callback hell".
+
+A forma de processar múltiplas Promise de maneira paralela e tratar o retorno de todas posteriormente
+
+- Utilizando o método Promise.all.
+
+Os três estados possíveis de uma Promise
+
+- Pending, fulfilled e rejected.
+
+Uma das formas de construir uma Promise no JavaScript
+
+- Invocando o seu construtor e passando uma função ao mesmo. Ex: new Promise((resolve, reject) => {}).
+
+Diferença entre o método on e once de uma instância EventEmitter
+
+- Um subscreve uma função a todas as ocorrências de um evento, o outro apenas para a primeira ocorrência.
+
+A palavra reservada await pode ser usada quando
+
+- Apenas dentro de uma função criada utilizando a palavra async e para aguardar a resolução de uma promise.
+
 ## Módulo V - Conceitos aplicados a qualidade de código e automação de testes em JS
 
 ### Aula I - Testes, TDD e BDD
 
+#### Testes
+
+##### Testes automatizados
+
+- Testes unitários;
+- Testes integrados;
+- Testes funcionais.
+
+##### Testes manuais e automatizados
+
+- Testes usabilidade;
+- Testes de aceitação do usuário;
+- Protótipos;
+- Testes funcionais;
+
+##### Ferramentas de testes
+
+- Teste de carga e performance;
+- Testes de segurança
+
+#### TDD (Test Driven Development)
+
+É um dos pilares do Extreme Programing, consiste em testar e refatorar em pequenos ciclos, onde você escreve o teste antes do código, faz o meso passar e refatorar o código.
+
+Etapas
+
+- Escrita do testes
+- Escrita do código
+- Refatoração
+
+Vantagens
+
+- Feedback rápido;
+- Maior segurança em alterações e novas funcionalidades;
+- Código mais limpo;
+- Produtividade.
+
+#### BDD (Behavior Drive Development)
+
+Técnica de desenvolvimento ágil que visa integrar regras de negócio com linguagens de programação.
+
+Pilares
+
+- Testes;
+- Documentação;
+- Exemplos.
+
+Vantanges
+
+- Compartilhamento de conhecimento;
+- Documentação dinâmica;
+- Visão do todo.
+
 ### Aula II - Conheça Mocha, Chai e Sinon
+
+#### Mocha
+
+```javascript
+// inicializando
+// criando o projeto testes
+npm init -y
+// adicionando o mocha
+npm i --save-dev mocha
+// alterar o package.json scripts.test para "mocha"
+// para executar os testes
+npm run test
+```
+
+```javascript
+// criar o diretório src
+// criar o arquivo math.js
+
+// math.js
+class Math {
+  sum = function sum(a, b) {
+    return a + b;
+  }
+
+  multiply = function multiply(a, b) {
+    return a * b;
+  }
+}
+
+module.exports = Math;
+```
+
+```javascript
+// math.spec.js
+// Não possui uma ferramenta de *assert*
+// E o *assert* é um pouco limitado, como alternativa temos o *chai*
+const assert = require('assert');
+const Math = require('../src/math.js');
+
+let value = 0;
+
+describe('Math class', function() {
+  // hooks
+  // permitir reiniciar uma variável antes de cada teste
+  beforeEach(function() {
+    value = 0;
+  })
+
+  // para validação de código assincrono, adicionamos o done no it para aguardar o processamento.
+  // mocha não recomenda utilizar arrow functions e sim fuction para ter o controle de escopo.
+  it('Sum two numbers', function(done) {
+    const math = new Math();
+
+    // é possível alterar o timeout do mocha, o padrão é 2000ms.
+    this.timeout(3000);
+
+    value = 0;
+
+    math.sum(value, 5, value => {
+      assert.equal(value, 10);
+      done();
+    });
+  });
+
+  // mocha permite deixar anotado os testes futuros
+  // it('Multiply two numbers');
+  
+  // mocha executa apenas esse teste
+  // it.only('Multiply two numbers', function() {});
+
+  // mocha desconsidera esse teste
+  // it.skip('Multiply two numbers', function() {});
+
+  it('Multiply two numbers', function() {
+    const math = new Math();
+
+    assert.equal(math.multiply(value, 5), 0);
+  });
+});
+```
 
 ### Aula II - Veja como traballha com Chai
 
+### Chai
+
+Ferramenta de *assert* de uma maneira mais descritiva
+
+```javascript
+// instalando o chai
+npm i --save-dev chai
+```
+
+```javascript
+// math.spec.js
+const assert = require('assert');
+const Math = require('../src/math.js');
+const expect = require('chai').expect;
+
+let value = 0;
+
+describe('Math class', function() {
+  // hooks
+  // permitir reiniciar uma variável antes de cada teste
+  beforeEach(function() {
+    value = 0;
+  })
+
+  // para validação de código assincrono, adicionamos o done no it para aguardar o processamento.
+  // mocha não recomenda utilizar arrow functions e sim fuction para ter o controle de escopo.
+  it('Sum two numbers', function(done) {
+    const math = new Math();
+
+    // é possível alterar o timeout do mocha, o padrão é 2000ms.
+    this.timeout(3000);
+
+    value = 5;
+
+    math.sum(value, 5, value => {
+      // assert
+      // assert.equal(value, 10);
+
+      // chai
+      expect(value).to.equal(10);
+      done();
+    });
+  });
+
+  // mocha permite deixar anotado os testes futuros
+  // it('Multiply two numbers');
+  
+  // mocha executa apenas esse teste
+  // it.only('Multiply two numbers', function() {});
+
+  // mocha desconsidera esse teste
+  // it.skip('Multiply two numbers', function() {});
+
+  it('Multiply two numbers', function() {
+    const math = new Math();
+
+    // é possível alterar o timeout do mocha, o padrão é 2000ms.
+    this.timeout(5000);
+    // assert
+    // assert.equal(math.multiply(value, 5), 0);
+
+    // chai
+    expect(math.multiply(value, 5)).to.equal(0);
+  });
+
+  // chai comparando propriedades de objetos
+  it('Compare property name of objects', function() {
+    const obj = {
+      name: 'Daniel'
+    };
+
+    // chai
+    expect(obj)
+      .to.have.property('name')
+      .equal('Daniel');
+  });
+
+  // chai comparando objetos
+  it.only('Compare objects', function() {
+    const obj = {
+      name: 'Daniel'
+    };
+
+    const obj2 = {
+      name: 'Daniel'
+    };
+
+    // chai
+    expect(obj).to.deep.equal(obj2);
+  });
+});
+```
+
 ### Aula IV - Desenvolvendo códigos com Sinon
+
+Ferramenta para *mockar* funções, métodos, API.
+
+```javascript
+// instalando o sinon
+npm i --save-dev sinon
+```
+
+```javascript
+// acrescentamos o método printSum
+
+// math.js
+class Math {
+  sum = function sum(a, b) {
+    return a + b;
+  }
+
+  multiply = function multiply(a, b) {
+    return a * b;
+  }
+
+  printSum(req, res, a, b) {
+    res.load('index', a + b);
+  }
+}
+
+module.exports = Math;
+```
+
+```javascript
+// math.spec.js
+
+const assert = require('assert');
+const Math = require('../src/math.js');
+const expect = require('chai').expect;
+const sinon = require('sinon');
+
+let value = 0;
+
+describe('Math class', function() {
+  // hooks
+  // permitir reiniciar uma variável antes de cada teste
+  beforeEach(function() {
+    value = 0;
+  })
+
+  // para validação de código assincrono, adicionamos o done no it para aguardar o processamento.
+  // mocha não recomenda utilizar arrow functions e sim fuction para ter o controle de escopo.
+  it('Sum two numbers', function(done) {
+    const math = new Math();
+
+    // é possível alterar o timeout do mocha, o padrão é 2000ms.
+    this.timeout(3000);
+
+    value = 5;
+
+    math.sum(value, 5, value => {
+      // assert
+      // assert.equal(value, 10);
+
+      // chai
+      expect(value).to.equal(10);
+      done();
+    });
+  });
+
+  // mocha permite deixar anotado os testes futuros
+  // it('Multiply two numbers');
+  
+  // mocha executa apenas esse teste
+  // it.only('Multiply two numbers', function() {});
+
+  // mocha desconsidera esse teste
+  // it.skip('Multiply two numbers', function() {});
+
+  it('Multiply two numbers', function() {
+    const math = new Math();
+
+    // é possível alterar o timeout do mocha, o padrão é 2000ms.
+    this.timeout(5000);
+    // assert
+    // assert.equal(math.multiply(value, 5), 0);
+
+    // chai
+    expect(math.multiply(value, 5)).to.equal(0);
+  });
+
+  // chai comparando propriedades de objetos
+  it('Compare property name of objects', function() {
+    const obj = {
+      name: 'Daniel'
+    };
+
+    // chai
+    expect(obj)
+      .to.have.property('name')
+      .equal('Daniel');
+  });
+
+  // chai comparando objetos
+  it('Compare objects', function() {
+    const obj = {
+      name: 'Daniel'
+    };
+
+    const obj2 = {
+      name: 'Daniel'
+    };
+
+    // chai
+    expect(obj).to.deep.equal(obj2);
+  });
+
+  // sinon para mockar função
+  it.only('Calls req with sum and index values', function() {
+    const req = {};
+    const res = {
+      // função espiã que diz se a função da classe foi ou não executada
+      load: sinon.spy()
+    };
+    const math = new Math();
+
+    math.printSum(req, res, 5, 5);
+
+    // chai e sinon
+    // verifica se função foi chamada
+    expect(res.load.calledOnce).to.be.true;
+
+    // chai e sinon
+    // verifica se o segundo argumento é o resultado da soma dos dois valores enviados
+    // expect(res.load.args[0][1]).to.equal(10);
+  });
+});
+```
+
+#### Exercícios - Módulo V
+
+Caso não seja passada nenhuma configuração de diretórios ao mocha, qual será o diretório na raiz do projeto onde serão buscados os testes?
+
+- test
+
+Ao utilizar o módulo assert do Node.js, quando utilizamos seu método equal para validar dois valores, caso os dois não sejam iguais, qual será o seu comportamento?
+
+- Será disparado um erro contendo informações sobre a asserção incorreta.
+
+Os testes unitários são responsáveis por testar o quê?
+
+- A menor unidade do seu código como funções, métodos e afins.
+
+Os testes funcionais visam:
+
+- Garantir o correto funcionamento de uma funcionalidade de ponta a ponta.
+
+Como aguardamos um código assíncrono finalizar em um teste no mocha?
+
+- Utilizando a função done que vem como parâmetro ao it posteriormente à execução do código assíncrono.
+
+Quais são as etapas que compõem o TDD?
+
+- Escrita do teste descrevendo o comportamento esperado, escrita do código com o comportamento esperado e refatoração.
+
+Qual a maior vantagem de utilizar o chai como ferramenta de asserção?
+
+- Ao escrever asserções utilizando chai, uma das maiores vantagens é a sua escrita muito mais expressiva do comportamento esperado.
+
+Qual é um dos principais objetivos do BDD (desenvolvimento orientado a comportamento)?
+
+- Integrar regras de negócio com linguagens de programação.
+
+A responsabilidade dos testes de integração é:
+
+- Garantir o funcionamento de unidades menores trabalhando em conjunto com outras.
+
+Qual a função do método spy do sinon?
+
+- Criar uma função ou interceptar a execução de uma outra função a fim de obter dados sobre como a mesma foi invocada.
 
 ## Módulo VI - Tratamento e exceções
 
-### Aula I - Introdução a Tratamento e exceções
+### Aula I - Como identificar os erros
 
-### Aula II - Como identificar os erros
+### Aula II - Debugging parte I
 
-### Aula III - Debugging parte I
-
-### Aula IV - Debugging parte II
+### Aula III - Debugging parte II

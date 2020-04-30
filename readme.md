@@ -1280,6 +1280,131 @@ Qual a função do método spy do sinon?
 
 ### Aula I - Como identificar os erros
 
+Uma maneira de capturar erros no javascript é utilizando try/catch e também impede que o programa pare sua execução caso ocorra algum erro
+
+```javascript
+// erro-1.js
+
+// erro: hoisting para constantes não existe
+console.log('Start')
+try {
+  console.log(name);
+  const name = 'Daniel';
+} catch (err) {
+  console.log('Error: ', err)
+}
+console.log('End')
+```
+
+```javascript
+// erro-2.js
+
+// customizando mensagens de erro
+try {
+  const myError = new Error('Custom message');
+  throw myError;
+} catch (err) {
+  console.log('Error: ', err)
+}
+
+```
+
+```javascript
+// erro-3.js
+
+// extendendo classe de erro
+class CustomError extends Error {
+  constructor({message, data}) {
+    super(message);
+    this.data = data;
+  }
+}
+try {
+  const myCustomError = new CustomError({
+    message: 'Custom message',
+    data: {
+      type: 'Server error'
+    }
+  });
+
+  throw myCustomError;
+} catch (err) {
+  if (err.data.type === 'Server error') {
+    console.log('Error: ', err)
+    console.log('Error Data: ', err.data)
+  } else {
+    console.log('Generic Error: ', err)
+  }
+}
+```
+
 ### Aula II - Debugging parte I
 
+Exemplos práticos utilizado o debugger do navegador Chrome
+
+- Console
+- Network
+- Sources
+- Elements
+- Breakpoints
+
 ### Aula III - Debugging parte II
+
+Exemplos práticos utilizado o debugger do navegador Chrome
+
+- Console
+- Network
+- Sources
+- Elements
+- Breakpoints
+- Tipos de console
+  - console.log('Log normal')
+  - console.warning('Alerta')
+  - console.error('Erro): Mostrar logs de erro no console do navegador.
+  - console.trace: Indica em qual lugar o console está
+  - console.group e console.groupEnd: Agrupa informações
+  - console.time e console.timeEnd: Exibe tempo de execução de um trecho de código
+  - console.table(['Daniel', 'Digital Innovation One']): Formata os dados em tabela
+  - console.log('%c style log', 'color: blue'): permitir estilizar a mensagem
+
+#### Exercícios - Módulo VI
+
+O que acontece no Chrome ao incluirmos a declaração debugger dentro de um código JavaScript?
+
+- O código irá parar sua execução ao encontrar a declaração, permitindo o debugging.
+
+Quais as vantagens de estender a classe de erro padrão do JavaScript?
+
+- A possibilidade de adicionar métodos, propriedades e comportamentos ao erro.
+
+Qual o objetivo do método console.assert?
+
+- Exibir uma mensagem de erro no console caso a asserção não passe.
+
+Qual o objetivo da aba styles dentro das ferramentas para desenvolvedor do navegador Chrome?
+
+- Tem o objetivo de mostrar as regras de CSS aplicadas nos elementos, permitindo o debugging dos estilos.
+
+Qual a maneira mais comum para capturar uma exceção no JavaScript?
+
+- Através das declarações try e catch.
+
+Qual o objetivo da função pretty print do navegador Chrome?
+
+- Remover a minificação de um arquivo para possibilitar um debugging melhor.
+
+Qual o objetivo do método console.time e console.timeEnd?
+
+- Marcar o tempo de execução de um trecho de código
+
+Qual o objetivo do método console.error?
+
+- Mostrar logs de erro no console do navegador.
+
+Qual a objetivo da declaração finally após os blocos de try e catch?
+
+- Garantir e deixar explícito que um bloco de código será executado em caso de erro ou não.
+
+Qual o objetivo da aba network dentro das ferramentas para desenvolvedor do Chrome?
+
+- Trazer informações sobre as requisições executadas no navegador.

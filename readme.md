@@ -4,8 +4,8 @@ Funções avançadas do ES6
 
 ## Módulo I - Funções avançadas do ES6
 
-> Autor: Celso Henrique da Silva
-Origem: Digital Innovation One
+- Autor: Celso Henrique da Silva
+- Origem: Digital Innovation One
 
 ### Aula I - Aprenda o que é e como trabahar com Arrow Functions
 

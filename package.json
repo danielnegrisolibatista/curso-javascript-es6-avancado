@@ -19,7 +19,7 @@
   "homepage": "https://github.com/danielnegrisolibatista/curso-javascript-es6-avancado#readme",
   "devDependencies": {
     "chai": "^4.2.0",
-    "mocha": "^7.1.2",
+    "mocha": "^10.2.0",
     "sinon": "^9.0.2"
   }
 }
